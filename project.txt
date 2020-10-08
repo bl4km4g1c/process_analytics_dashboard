@@ -1,0 +1,23 @@
+https://towardsdatascience.com/how-to-build-a-complex-reporting-dashboard-using-dash-and-plotl-4f4257c18a7f
+
+Completed Steps:
+
+1. Sizing graphs
+2. Navbar
+3. Basic cards
+4. Automatically generating graphs - resize based in input
+
+
+To Dos:
+
+1. Change rules to circle so it displays on chart properly - done
+2. Add auto Subplots - almost done, basics work, need to add auto subplotting on the histogram and adjusting graph details
+3. Add dropdown menu for changing dataset 
+
+Next Steps:
+a. Figure out how to display images ----> https://www.pluralsight.com/guides/explore-python-libraries:-dash
+1. Complete two cards with images of machines on front page
+2. Complete rules for process control and add selectable parameters to graphs
+3. Add ability to overlay data on one graph
+4. Add table for data
+5. Add input with timestamps
