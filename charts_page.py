@@ -44,14 +44,29 @@ def display_body(fig):
     return body
 
 
-#write code for main page here to pull data and such
+#write code for main page here to pull data - currently data not stored anywhere so we cannot pull it, need to create it in the script..... could store locally in a chahe
+#querying local data
+#need to figure out how to save local data --- maybe need to use mysql??
+#df = pd.read_csv('Python_Main/assets/df.csv')
+#df2 = pd.read_csv('Python_Main/assets/df2.csv')
 
 df = dg.generate_data(1000, 5)
 df2 = dg.create_control_data(df)
 fig = control_chart(df, df2)
 fig2 = histogram(df)
 
+
+###make these dynamic by grabbing HREF name and putting it into the title, also use the HREF name to pull correct data from generated data set....
+
 def sixty_one():
+    layout = html.Div([
+        nav,
+        header,
+        display_body(fig)
+    ])
+    return layout
+    
+def sixty_two():
     layout = html.Div([
         nav,
         header,
