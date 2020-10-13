@@ -1,5 +1,15 @@
 https://towardsdatascience.com/how-to-build-a-complex-reporting-dashboard-using-dash-and-plotl-4f4257c18a7f
 
+
+Key thing to figure out:
+
+1. How do we filter the data in our dataset by the HREF / selections we have made from the dash callbacks functions???? 
+
+We need to do this first as it will be how we select data for all of our processes later on unless we want to make it static with manually assigned tags for each page. (This is not an ideal state)
+
+
+
+
 Git testing 
 
 Completed Steps:

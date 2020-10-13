@@ -5,6 +5,7 @@ import data as dg
 import datetime as dt
 import pandas as pd
 from dash.dependencies import Input, Output
+from overview_page import overview_page
 
 ####import my scripts
 from app_backend import app
@@ -43,12 +44,8 @@ def display_page(pathname):
         return Homepage()
     if pathname == '/360-1':
         return sixty_one()
-    if pathname == '/360-2':
-        return sixty_two()
-    #if pathname == '/360_2':
-    #    return sixty_two()
     else:
-        return Homepage()
+        return overview_page()
     
 #card button callback
 #@app.callback(Output('page-content', 'children'),
