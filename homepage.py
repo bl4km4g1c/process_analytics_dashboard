@@ -39,7 +39,7 @@ header = html.Div([
 #              ["4010-5","https://upload.wikimedia.org/wikipedia/en/9/92/Pok%C3%A9mon_episode_1_screenshot.png"]]
 
 
-line_list = dg.data_request("https://raw.githubusercontent.com/bl4km4g1c/process_analytics_dashboard/1/Index.csv?token=AQUNPSLVIET6RK4MDOSLZGK7QZYMO&_sm_au_=isVZpQZkR1qq4jSNpGsWvKttvN1NG")
+line_list = dg.data_request("https://raw.githubusercontent.com/bl4km4g1c/process_analytics_dashboard/master/Index.csv?_sm_au_=isVZpQZkR1qq4jSNpGsWvKttvN1NG")
 
 line_list =line_list.values.tolist()
 #print (line_list)

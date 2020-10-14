@@ -17,6 +17,9 @@ def control_chart(df, df2):
     #find array shape of 2nd df
     length2, width2 = df2.shape
     size = int(width2/width)
+    print(size)
+    print(df2.shape)
+    print(df.shape)
     #initialise figure
     #fig = go.Figure()
     #initialise subplots figure - is subplots better than new plot????? - if subplots look bad change to add new plot instead
@@ -93,4 +96,5 @@ def histogram(df,df2):
     fig.show()
     
     return fig 
+
 

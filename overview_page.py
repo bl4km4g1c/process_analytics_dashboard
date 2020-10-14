@@ -7,6 +7,7 @@ from navbar import Navbar
 from app_backend import app 
 from dash.dependencies import Input, Output
 from card_generator import card_template, card_template_overview
+from data import _datagen_ as dg
 
 nav = Navbar()
 
@@ -18,15 +19,33 @@ header = html.Div([
 ])
 
 #line components master list for all components in line  - create cards for overview - placeholder
-component_list = [["360-2", "Process 1", "https://upload.wikimedia.org/wikipedia/en/9/92/Pok%C3%A9mon_episode_1_screenshot.png"],
-                 ["360-2", "Process 2", "https://upload.wikimedia.org/wikipedia/en/9/92/Pok%C3%A9mon_episode_1_screenshot.png"],
-                 ["360-1", "Process 1", "https://raw.githubusercontent.com/bl4km4g1c/process_analytics_dashboard/master/360-1_Extruder.png?token=AQUNPSMTWHGRB2D4F5D5TSK7QZXFA&_sm_au_=isVZpQZkR1qq4jSNpGsWvKttvN1NG"],
-                  ["360-1", "Process 2", "https://upload.wikimedia.org/wikipedia/en/9/92/Pok%C3%A9mon_episode_1_screenshot.png"],
-                  ["360-2", "Process 3", "https://upload.wikimedia.org/wikipedia/en/9/92/Pok%C3%A9mon_episode_1_screenshot.png"],
-                  ["360-2", "Process 4", "https://upload.wikimedia.org/wikipedia/en/9/92/Pok%C3%A9mon_episode_1_screenshot.png"]
-                 ]
+# component_list = [["360-2", "Process 1", "https://upload.wikimedia.org/wikipedia/en/9/92/Pok%C3%A9mon_episode_1_screenshot.png"],
+#                  ["360-2", "Process 2", "https://upload.wikimedia.org/wikipedia/en/9/92/Pok%C3%A9mon_episode_1_screenshot.png"],
+#                  ["360-1", "Process 1", "https://raw.githubusercontent.com/bl4km4g1c/process_analytics_dashboard/master/360-1_Extruder.png?token=AQUNPSMTWHGRB2D4F5D5TSK7QZXFA&_sm_au_=isVZpQZkR1qq4jSNpGsWvKttvN1NG"],
+#                   ["360-1", "Process 2", "https://upload.wikimedia.org/wikipedia/en/9/92/Pok%C3%A9mon_episode_1_screenshot.png"],
+#                   ["360-2", "Process 3", "https://upload.wikimedia.org/wikipedia/en/9/92/Pok%C3%A9mon_episode_1_screenshot.png"],
+#                   ["360-2", "Process 4", "https://upload.wikimedia.org/wikipedia/en/9/92/Pok%C3%A9mon_episode_1_screenshot.png"]
+#                  ]
 
 body = html.Div(id = 'card-overview')
+
+component_list = dg.data_request("https://raw.githubusercontent.com/bl4km4g1c/process_analytics_dashboard/master/Index.csv?_sm_au_=isVZpQZkR1qq4jSNpGsWvKttvN1NG")
+
+component_list =component_list.values.tolist()
+#print (line_list)
+
+#function to kill duplicates
+def remove_duplicates(line_list, comp_filter):
+    unique_list = []
+    output_list = []
+    for entry in line_list:
+        if entry[1] == comp_filter and entry[4] not in unique_list:
+            unique_list.append(entry[4])
+            output_list.append(entry)
+        else:
+         #   print ('{} not equal to {}'.format(entry[1]), str(comp_filter))
+            None
+    return output_list
 
 #define overview page function and generate when called from index script
 def overview_page():
@@ -44,13 +63,16 @@ def overview_page():
 def make_card(pathname):
     
     process_cards = []
-    for entry in component_list:
-        if pathname.strip('/') == entry[0]:
-            process_cards.append(card_template_overview(entry[0], entry[1], entry[2]))
+    pathname = pathname.strip('/')
+    
+    new_list = remove_duplicates(component_list, pathname)
+    for entry in new_list:
+        if pathname == entry[1]:
+            process_cards.append(card_template_overview(entry[1], entry[4], entry[5]))
         else:
             None
         
-        body = dbc.Container([
+    body = dbc.Container([
         dbc.Row(#[
             process_cards
             )

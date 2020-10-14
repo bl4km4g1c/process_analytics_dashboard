@@ -58,14 +58,15 @@ class _datagen_():
                     rules.append(list_at_i[j])
                 else:
                     rules.append(None)
-                    
+            
+            
             d["x_bar{0}".format(i)] = x_bar
             d["x_sigma{0}".format(i)] = x_sigma
             d["UCL{0}".format(i)] = UCL
             d["LCL{0}".format(i)] = LCL
             d["rules{0}".format(i)] = rules
             
-        return pd.DataFrame(d)
+        return pd.DataFrame(d, index = df.index)
     
         
     def data_request(url):
@@ -74,7 +75,3 @@ class _datagen_():
         #print (df)
         
         return df
-        
-        
-        
-        

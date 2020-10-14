@@ -48,22 +48,19 @@ def display_body(fig):
         ])
     return body
 
-#code to generate_data for test runs
-#df = dg.generate_data(1000, 10)
+#code to import data for test runs
 
-df = dg.data_request("https://raw.githubusercontent.com/bl4km4g1c/process_analytics_dashboard/master/Data.csv?_sm_au_=iVV0H5HFR8JfJ47QpGsWvKttvN1NG")
+df = pd.read_csv("/workspace/Python_Main/myApp/dfmaster.csv")
+df2 = pd.read_csv("/workspace/Python_Main/myApp/dfmaster2.csv")
 
-
-df['Datetime'] = pd.to_datetime(df['Date']+" "+df['Time'])
-df = df.drop(['Date','Time'],axis=1)
 df = df.set_index(['Datetime'])
+df2 = df2.set_index(['Datetime'])
 
-df2 = dg.create_control_data(df)
+
+#Define figures for control chart
+
 fig = control_chart(df, df2)
 fig2 = histogram(df,df2)
-
-#code to pull actual data
-
 
 
 def charts_page():
@@ -74,6 +71,22 @@ def charts_page():
     ])
     return layout
 
+measure_list = dg.data_request("https://raw.githubusercontent.com/bl4km4g1c/process_analytics_dashboard/master/Index.csv?_sm_au_=isVZpQZkR1qq4jSNpGsWvKttvN1NG")
+
+measure_list = measure_list.values.tolist()
+
+#function to kill duplicates
+def remove_duplicates(measure_list, meas_filter, comp_filter):
+    unique_list = []
+    output_list = []
+    for entry in measure_list:
+        if entry[1] == comp_filter and entry[4] == meas_filter and entry[4] not in unique_list:
+            unique_list.append(entry[6])
+            output_list.append(entry[7])
+        else:
+            None
+    return output_list
+
 #callback to pull out href name
 @app.callback(Output('charts-page-name', 'children'),[
    Input('url', 'pathname')])
@@ -83,4 +96,18 @@ def display_page_name(pathname):
         return  "{} Control Charts".format(pathname.strip('/control_chart'))
     else:
         return  None
-    
+
+####callback to get pathname split correctly and to update data based on this
+#@app.callback(Output('chart-page-filter', 'children'),[
+#    Input('url', 'pathname')])
+#def chart_page_filter(pathname, measure_list):
+#    
+#    process_measures = []
+#    pathname = pathname.strip('/')
+#    
+#    new_list = measures(measure_list)
+#
+#
+#
+#
+#
