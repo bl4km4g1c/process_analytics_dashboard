@@ -2,6 +2,7 @@
 import numpy as np
 import pandas as pd
 import datetime as dt
+import csv
 
 #build a class for data generation - so that I can put all data functions into
 class _datagen_():
@@ -65,3 +66,15 @@ class _datagen_():
             d["rules{0}".format(i)] = rules
             
         return pd.DataFrame(d)
+    
+        
+    def data_request(url):
+        
+        df = pd.read_csv(url)
+        #print (df)
+        
+        return df
+        
+        
+        
+        

@@ -5,12 +5,15 @@ import dash_core_components as dcc
 import dash_html_components as html
 import plotly.graph_objects as go
 import plotly.express as px
+
 from navbar import Navbar
 import dash_bootstrap_components as dbc
 from data import _datagen_ as dg
 from charts import control_chart, histogram
 from app_backend import app
 from dash.dependencies import Input, Output
+from data import _datagen_ as dg
+
 
 nav = Navbar()
 
@@ -46,10 +49,21 @@ def display_body(fig):
     return body
 
 #code to generate_data for test runs
-df = dg.generate_data(1000, 10)
+#df = dg.generate_data(1000, 10)
+
+df = dg.data_request("https://raw.githubusercontent.com/bl4km4g1c/process_analytics_dashboard/master/Data.csv?_sm_au_=iVV0H5HFR8JfJ47QpGsWvKttvN1NG")
+
+
+df['Datetime'] = pd.to_datetime(df['Date']+" "+df['Time'])
+df = df.drop(['Date','Time'],axis=1)
+df = df.set_index(['Datetime'])
+
 df2 = dg.create_control_data(df)
 fig = control_chart(df, df2)
-fig2 = histogram(df)
+fig2 = histogram(df,df2)
+
+#code to pull actual data
+
 
 
 def charts_page():
