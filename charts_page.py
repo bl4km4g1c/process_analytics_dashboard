@@ -9,6 +9,8 @@ from navbar import Navbar
 import dash_bootstrap_components as dbc
 from data import _datagen_ as dg
 from charts import control_chart, histogram
+from app_backend import app
+from dash.dependencies import Input, Output
 
 nav = Navbar()
 
@@ -17,7 +19,7 @@ nav = Navbar()
 
 header = html.Div([
     html.P(),
-    html.H1("SPC Process Charts"),
+    html.H1(id='charts-page-name'),
     html.P()
 ])
 
@@ -43,33 +45,28 @@ def display_body(fig):
         ])
     return body
 
-
-#write code for main page here to pull data - currently data not stored anywhere so we cannot pull it, need to create it in the script..... could store locally in a chahe
-#querying local data
-#need to figure out how to save local data --- maybe need to use mysql??
-#df = pd.read_csv('Python_Main/assets/df.csv')
-#df2 = pd.read_csv('Python_Main/assets/df2.csv')
-
-df = dg.generate_data(1000, 5)
+#code to generate_data for test runs
+df = dg.generate_data(1000, 10)
 df2 = dg.create_control_data(df)
 fig = control_chart(df, df2)
 fig2 = histogram(df)
 
 
-###make these dynamic by grabbing HREF name and putting it into the title, also use the HREF name to pull correct data from generated data set....
+def charts_page():
+    layout = html.Div([
+        nav,
+        header,
+        display_body(fig)
+    ])
+    return layout
 
-def sixty_one():
-    layout = html.Div([
-        nav,
-        header,
-        display_body(fig)
-    ])
-    return layout
+#callback to pull out href name
+@app.callback(Output('charts-page-name', 'children'),[
+   Input('url', 'pathname')])
+
+def display_page_name(pathname):
+    if '/control_chart' in pathname:
+        return  "{} Control Charts".format(pathname.strip('/control_chart'))
+    else:
+        return  None
     
-def sixty_two():
-    layout = html.Div([
-        nav,
-        header,
-        display_body(fig)
-    ])
-    return layout

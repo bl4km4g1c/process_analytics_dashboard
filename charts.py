@@ -30,13 +30,13 @@ def control_chart(df, df2):
     #variable size data overlay generator
     for i in range(width):
         #change from chart to subplot ....
-        fig.add_trace(go.Scatter(x= df.index,y = df.iloc[:,i] , mode='lines+markers',
-                                name='Process {}'.format(i+1), line = dict(color=c[i], width=2)),
+        fig.add_trace(go.Scatter(x= df.index,y = df.iloc[:,i] , mode='lines',
+                                name='Measure {}'.format(i+1), line = dict(color="forestgreen", width=2)),
                                  row=i+1, col =1)
         for j in range(size):
             if j%4==0 and not j ==0:
                 fig.add_trace(go.Scatter(x= df.index,y = df2.iloc[:, j+5*i] , mode='markers',
-                                   name='{}'.format(df2.columns[j+5*i]), marker=dict(size = 10, color='tomato', opacity=0.5, symbol='circle-open')),
+                                   name='{}'.format(df2.columns[j+5*i]), marker=dict(size = 5, color='tomato', opacity=1, symbol='circle')),
                                     row=i+1, col=1)
                 print(j)
             elif j==1 and not j ==0:
@@ -66,7 +66,14 @@ def histogram(df):
     fig = make_subplots(rows = width, cols = 1)
     for i in range(width):
         
-        fig.add_trace(go.Histogram(y=df.iloc[:,i]), row = i+1, col =1)
+        fig.add_trace(go.Histogram(y=df.iloc[:,i], color = "forestgreen"), 
+                                   #color_discrete_sequence=['forestgreen']),
+                                      row = i+1,
+                                      col =1)
+        
+#        for j in range(size):
+#            if j%==0 and not j==0:
+#                fig.add_trace(go.Histogram(y = df2.iloc[,j+5*i], row = i+1, col=1))
         
     fig.update_layout(
         xaxis_title_text = 'Count',
