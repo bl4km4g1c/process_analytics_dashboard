@@ -18,14 +18,6 @@ header = html.Div([
     html.P()
 ])
 
-#line components master list for all components in line  - create cards for overview - placeholder
-# component_list = [["360-2", "Process 1", "https://upload.wikimedia.org/wikipedia/en/9/92/Pok%C3%A9mon_episode_1_screenshot.png"],
-#                  ["360-2", "Process 2", "https://upload.wikimedia.org/wikipedia/en/9/92/Pok%C3%A9mon_episode_1_screenshot.png"],
-#                  ["360-1", "Process 1", "https://raw.githubusercontent.com/bl4km4g1c/process_analytics_dashboard/master/360-1_Extruder.png?token=AQUNPSMTWHGRB2D4F5D5TSK7QZXFA&_sm_au_=isVZpQZkR1qq4jSNpGsWvKttvN1NG"],
-#                   ["360-1", "Process 2", "https://upload.wikimedia.org/wikipedia/en/9/92/Pok%C3%A9mon_episode_1_screenshot.png"],
-#                   ["360-2", "Process 3", "https://upload.wikimedia.org/wikipedia/en/9/92/Pok%C3%A9mon_episode_1_screenshot.png"],
-#                   ["360-2", "Process 4", "https://upload.wikimedia.org/wikipedia/en/9/92/Pok%C3%A9mon_episode_1_screenshot.png"]
-#                  ]
 
 body = html.Div(id = 'card-overview')
 

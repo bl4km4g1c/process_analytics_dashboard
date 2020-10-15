@@ -13,6 +13,7 @@ from charts import control_chart, histogram
 from app_backend import app
 from dash.dependencies import Input, Output
 from data import _datagen_ as dg
+from string_parser import _stringparser_ as sp
 
 
 nav = Navbar()
@@ -23,6 +24,7 @@ nav = Navbar()
 header = html.Div([
     html.P(),
     html.H1(id='charts-page-name'),
+    html.H1(id='chart-page-filter'),
     html.P()
 ])
 
@@ -92,22 +94,42 @@ def remove_duplicates(measure_list, meas_filter, comp_filter):
    Input('url', 'pathname')])
 
 def display_page_name(pathname):
+    #display path name if control chart is in title  
     if '/control_chart' in pathname:
-        return  "{} Control Charts".format(pathname.strip('/control_chart'))
+        return sp.chart_titles(pathname)
     else:
-        return  None
+        return None
 
-####callback to get pathname split correctly and to update data based on this
-#@app.callback(Output('chart-page-filter', 'children'),[
-#    Input('url', 'pathname')])
-#def chart_page_filter(pathname, measure_list):
-#    
-#    process_measures = []
-#    pathname = pathname.strip('/')
-#    
-#    new_list = measures(measure_list)
-#
-#
-#
-#
-#
+###callback to get pathname split correctly and to update data based on this
+@app.callback(Output('chart-page-filter', 'children'),[
+   Input('url', 'pathname')])
+def chart_page_filter(pathname):
+    
+    if '/control_chart' in pathname:
+        measure_name, comp_filter = sp.filter_control(pathname)
+        print (pathname)
+        print (measure_name)
+        print (comp_filter)
+
+        measures = remove_duplicates(measure_list, measure_name, comp_filter)
+        
+        #loop through measures and find / except all measures which arent included
+        index = 0
+        successful_tries = []
+        for measure in measures:
+            print (measure)
+            try:
+                print (df[measures[index]])
+                successful_tries.append(measures[index])
+            except Exception:
+                print ('{} measure not found in this set'.format(measure))
+            #step through the index until the last
+            index = index + 1
+        print (successful_tries)
+        print (df[successful_tries])
+        
+        df = df[successful_tries]
+        
+        
+        return None
+    
