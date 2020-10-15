@@ -24,21 +24,6 @@ header = html.Div([
 ])
 
 
-#card docs https://dash-bootstrap-components.opensource.faculty.ai/docs/components/card/
-
-#body = html.Div(html.Img(src = app.get_asset_url('download.png')))
-
-#place holder list of lines for producing homepage cards
-
-# line_list = [["360-1","https://upload.wikimedia.org/wikipedia/en/9/92/Pok%C3%A9mon_episode_1_screenshot.png"], 
-#              ["360-2","https://upload.wikimedia.org/wikipedia/en/9/92/Pok%C3%A9mon_episode_1_screenshot.png"],
-#              ["4010-1","https://upload.wikimedia.org/wikipedia/en/9/92/Pok%C3%A9mon_episode_1_screenshot.png"],
-#              ["4010-2", "https://upload.wikimedia.org/wikipedia/en/9/92/Pok%C3%A9mon_episode_1_screenshot.png"],
-#              ["4010-3", "https://upload.wikimedia.org/wikipedia/en/9/92/Pok%C3%A9mon_episode_1_screenshot.png"],
-#              ["4010-4", "https://upload.wikimedia.org/wikipedia/en/9/92/Pok%C3%A9mon_episode_1_screenshot.png"],
-#              ["4010-5","https://upload.wikimedia.org/wikipedia/en/9/92/Pok%C3%A9mon_episode_1_screenshot.png"]]
-
-
 line_list = dg.data_request("https://raw.githubusercontent.com/bl4km4g1c/process_analytics_dashboard/master/Index.csv?_sm_au_=isVZpQZkR1qq4jSNpGsWvKttvN1NG")
 
 line_list =line_list.values.tolist()

@@ -1,4 +1,4 @@
-import dash
+# import dash
 # import dash_daq as daq
 # import numpy as np
 # import pandas as pd
@@ -10,6 +10,7 @@ from plotly.subplots import make_subplots
 # from navbar import Navbar
 # import dash_bootstrap_components as dbc
 # from data import _datagen_ as dg
+import dash_daq as daq
 
 
 def control_chart(df, df2):
@@ -34,10 +35,10 @@ def control_chart(df, df2):
     fig = make_subplots(rows = width, cols=1 )
 
     # initialise colour list for loop
-    c = ['royalblue', 'firebrick', 'firebrick', 'darkviolet', 'darkviolet']
+    c = ['royalblue', 'firebrick', 'firebrick', 'darkviolet', 'darkviolet', 'darkviolet']
 
     # initialise list for type of markers
-    l = ['dot', 'dash', 'dash', 'dash']
+    l = ['dot', 'dash', 'dash', 'dash', 'dash', 'dash']
 
     # variable size data overlay generator
     for i in range(width):
@@ -86,31 +87,17 @@ def control_chart(df, df2):
     return fig
 
 
-def histogram(df, df2):
+def histogram(df):
     # shape
     length, width = df.shape
-    length2, width2 = df2.shape
-    # size = int(length2/length)
-    # figure for histogram
-    # group_labels = ['Test']
-    # fig2 = ff.create_distplot([df['data']], group_labels) #this is a distplot not a histogram - histogram is using GO
+    
     fig = make_subplots(rows=width, cols=1)
     for i in range(width):
-        # for j in range(size):
-        #     if j%4==0 and not j==0:
-        #         if df2.iloc[:, j+5*i] is not None:
-        #             fig.add_trace(go.Histogram(y=df2.iloc[:,j+5*i], 
-                    # marker=dict(color = "tomato")), row = i+1, col =1)
-
-        #         else:
+        
         fig.add_trace(go.Histogram(y=df.iloc[:, i],
                                    marker=dict(color="forestgreen")),
                                    row=i+1,
                                    col=1)
-
-#        for j in range(size):
-#            if j%==0 and not j==0:
-#                fig.add_trace(go.Histogram(y = df2.iloc[,j+5*i], row = i+1, col=1))
 
     fig.update_layout(
         xaxis_title_text='Count',
@@ -122,7 +109,11 @@ def histogram(df, df2):
     fig.show()
 
     return fig
-
-# def indicator_circle(RAG):
     
+
+
+
+
+
+
 

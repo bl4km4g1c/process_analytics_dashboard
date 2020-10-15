@@ -52,6 +52,9 @@ class _datagen_():
 
             # get list at position
             list_at_i = df.iloc[:, i]
+            
+            #find name of column
+            col = df.columns[i]
 
             # create statistical indicators
 
@@ -80,12 +83,12 @@ class _datagen_():
                     tester = all(x == None for x in rules[j-RAG_history:j])
                     RAGcheck.append(tester)
 
-            d["x_bar{0}".format(i)] = x_bar
-            d["x_sigma{0}".format(i)] = x_sigma
-            d["UCL{0}".format(i)] = UCL
-            d["LCL{0}".format(i)] = LCL
-            d["rules{0}".format(i)] = rules
-            d["RAG{0}".format(i)] = RAGcheck
+            d["x_bar{0}".format(col)] = x_bar
+            d["x_sigma{0}".format(col)] = x_sigma
+            d["UCL{0}".format(col)] = UCL
+            d["LCL{0}".format(col)] = LCL
+            d["rules{0}".format(col)] = rules
+            d["RAG{0}".format(col)] = RAGcheck
 
         return pd.DataFrame(d, index=df.index)
 
@@ -95,3 +98,20 @@ class _datagen_():
         # print (df)
 
         return df
+    
+    def modify_df2(df2, successful_tries):
+        ## will use this if indexing on measures doesnt work 
+        second_df_mod = []
+        for i in range(len(successful_tries)):
+            #print (successful_tries[i])
+            for j in range(len(df2.columns)):
+                #print (df2.columns[j])
+                if successful_tries[i] in df2.columns[j]:
+                    #print (successful_tries[i] + " " + df2.columns[j])
+                    second_df_mod.append(df2.columns[j])
+
+        #print (second_df_mod)
+
+        new_df = df2[second_df_mod]
+        return new_df
+        

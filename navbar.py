@@ -7,8 +7,9 @@ from app_backend import app
 from dash.dependencies import Input, Output
 import pytz
 
+
 @app.callback(Output('live-update-time', 'children'), [
-Input('interval-component', 'n_intervals')])
+    Input('interval-component', 'n_intervals')])
 
 def update_date(n):
     d = dt.datetime.now(pytz.timezone('Australia/Sydney')).strftime('%Y-%m-%d %HH:%MM')
@@ -29,7 +30,7 @@ def Navbar():
     
     layout = dbc.NavbarSimple(
         children=[
-            dbc.NavItem(dbc.NavLink("Report", href = '/report')),
+            dbc.NavItem(dbc.NavLink("Report", href = '/report_page')),
             dbc.NavItem(dbc.NavLink("Information", href = '/info')),
             dbc.DropdownMenu(
                 children=[

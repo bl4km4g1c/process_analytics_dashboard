@@ -11,6 +11,7 @@ from overview_page import overview_page
 from app_backend import app
 from homepage import Homepage
 from charts_page import charts_page
+from report_page import report_page
 
 
 ####print version of dash
@@ -47,6 +48,8 @@ def display_page(pathname):
             return charts_page()
         else: 
             return overview_page()
+    if pathname == '/report_page':
+        return report_page()
     else:
         return Homepage()
     
