@@ -2,7 +2,10 @@
 import numpy as np
 import pandas as pd
 import datetime as dt
-# import csv
+# import dash_daq as dq
+# from charts_page import remove_duplicates as remove_duplicates_measures
+# import pandas as pd
+
 
 # build a class for data generation - so that I can put all data functions into
 
@@ -43,7 +46,7 @@ class _datagen_():
         # create dictionary
         d = {}
         # length of historical RAG check
-        RAG_history = 10
+        RAG_history = 30
 
         # rebuild to only do first and last position entries
         # to save on processing power
@@ -52,8 +55,8 @@ class _datagen_():
 
             # get list at position
             list_at_i = df.iloc[:, i]
-            
-            #find name of column
+
+            # find name of column
             col = df.columns[i]
 
             # create statistical indicators
@@ -98,20 +101,26 @@ class _datagen_():
         # print (df)
 
         return df
-    
+
     def modify_df2(df2, successful_tries):
-        ## will use this if indexing on measures doesnt work 
+        # # will use this if indexing on measures doesnt work
         second_df_mod = []
         for i in range(len(successful_tries)):
-            #print (successful_tries[i])
+            # print (successful_tries[i])
             for j in range(len(df2.columns)):
-                #print (df2.columns[j])
+                # print (df2.columns[j])
                 if successful_tries[i] in df2.columns[j]:
-                    #print (successful_tries[i] + " " + df2.columns[j])
+                    # print (successful_tries[i] + " " + df2.columns[j])
                     second_df_mod.append(df2.columns[j])
 
-        #print (second_df_mod)
+        # print (second_df_mod)
 
         new_df = df2[second_df_mod]
         return new_df
-        
+    
+    def dropdown_times(df, df2, start_date):
+        df = df[df.index >= start_date]
+        df2 = df2[df2.index >= start_date]
+        return df, df2
+
+# create cards for homepage

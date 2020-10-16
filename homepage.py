@@ -1,10 +1,10 @@
-import dash
-import dash_core_components as dcc
+# import dash
+# import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
-import base64
+# import base64
 from navbar import Navbar
-from app_backend import app 
+# from app_backend import app
 from card_generator import card_template
 from data import _datagen_ as dg
 
@@ -24,12 +24,14 @@ header = html.Div([
 ])
 
 
-line_list = dg.data_request("https://raw.githubusercontent.com/bl4km4g1c/process_analytics_dashboard/master/Index.csv?_sm_au_=isVZpQZkR1qq4jSNpGsWvKttvN1NG")
+line_list = dg.data_request("/workspace/Python_Main/myApp/Resources/Index.csv")
 
-line_list =line_list.values.tolist()
-#print (line_list)
+line_list = line_list.values.tolist()
 
-#function to kill duplicates
+
+# function to kill duplicates
+
+
 def remove_duplicates(line_list):
     unique_list = []
     output_list = []
@@ -41,23 +43,26 @@ def remove_duplicates(line_list):
             None
     return output_list
 
-homepage_list = remove_duplicates(line_list)
-    
 
-#function to create list of cards for population in home page
+homepage_list = remove_duplicates(line_list)
+
+
+# function to create list of cards for population in home page
 
 line_cards = []
 for entry in homepage_list:
-        line_cards.append(card_template(entry[1], entry[2]))
-    
-#create body of home page
-    
+    image_path = entry[2]
+    # print(image_path)
+    line_cards.append(card_template(entry[1], image_path))
+
+# create body of home page
+
 body = dbc.Container([
-    dbc.Row(#[
+    dbc.Row(
         line_cards
     )
-       
 ])
+
 
 def Homepage():
     layout = html.Div([

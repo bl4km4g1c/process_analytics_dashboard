@@ -43,7 +43,7 @@ def Navbar():
             ),
             html.P(id = 'live-update-time'),
             dcc.Interval(id = 'interval-component',
-                         interval = 1*5000, #milliseconds
+                         interval = 20*1000, #milliseconds
                          n_intervals = 0)
         ],
         brand = "Homepage",

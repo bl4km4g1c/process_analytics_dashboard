@@ -2,12 +2,13 @@ import dash
 import numpy as np
 import pandas as pd
 import dash_daq as daq
+import pytz
 import dash_core_components as dcc
 import dash_html_components as html
 import plotly.graph_objects as go
 import plotly.express as px
-from datetime import datetime as dt
-from datetime import date, timedelta
+import datetime as dt
+#from datetime import date, timedelta
 
 from navbar import Navbar
 import dash_bootstrap_components as dbc
@@ -18,20 +19,6 @@ from dash.dependencies import Input, Output
 from data import _datagen_ as dg
 from string_parser import _stringparser_ as sp
 
-# ### Code to import data and measure list ###
-
-df = pd.read_csv("/workspace/Python_Main/myApp/dfmaster.csv")
-df2 = pd.read_csv("/workspace/Python_Main/myApp/dfmaster2.csv")
-measure_list = dg.data_request("https://raw.githubusercontent.com/bl4km4g1c/process_analytics_dashboard/master/Index.csv?_sm_au_=isVZpQZkR1qq4jSNpGsWvKttvN1NG")
-
-
-# Set Index for imported data
-df = df.set_index(['Datetime'])
-df2 = df2.set_index(['Datetime'])
-
-
-# Send measures to list
-measure_list = measure_list.values.tolist()
 
 # ### Define navigation bar ###
 
@@ -44,28 +31,6 @@ header = html.Div([
     html.H1(id='charts-page-name'),
     html.P(),
 ])
-
-# ### date time picker ####
-
-# time_picker = html.Div([
-#     html.Label('Start Time'),
-#     dcc.Input(
-#         id='start-time-input',
-#         type='datetime-local',
-#         value=dt.strftime(dt.utcnow()-pd.offsets.BDay(10), '%Y-%m-%dT%H:%M'),
-#         className='form-control',
-#     ),
-# ]),
-# html.Div([
-#     html.Label('End Time:'),
-#     dcc.Input(
-#         id='end-time-input',
-#         type='datetime-local',
-#         value=dt.strftime(dt.utcnow()-pd.offsets.Minute(10), '%Y-%m-%dT%H:%M'),
-#         className='form-control',
-#     ),
-# ])
-
 
 # function to kill duplicates
 
@@ -80,7 +45,20 @@ def remove_duplicates(measure_list, meas_filter, comp_filter):
             output_list.append(entry[7])
         else:
             None
-    return output_list
+    return output_list, unique_list
+
+#create selection dropdown
+dropdown = html.Div([
+    dcc.Dropdown(
+        id = 'time-dropdown',
+        options = [
+            {'label': "Last Hour", "value": 1},
+            {'label': "Last Shift", "value": 12},
+            {'label': "Last Day", "value": 24}
+        ],
+        value = 1
+    )
+])
 
 
 # #################### CALLBACK FUNCTIONS #######################
@@ -104,19 +82,40 @@ def display_page_name(pathname):
 
 @app.callback([
     Output('chart-page-filter', 'figure'),
-    Output('histo-page-filter', 'figure'),
-    Output('RAG-indicator', 'children')],
-    [Input('url', 'pathname')])
-def chart_page_filter(pathname):
+    Output('histo-page-filter', 'figure')],
+    [Input('url', 'pathname'),
+    Input('time-dropdown', 'value'),
+    Input('interval-component', 'n_intervals')
+    ])
+def chart_page_filter(pathname, hours, n):
+    
+    # ### Code to import data and measure list ###
+
+    df = pd.read_csv("/workspace/Python_Main/myApp/dfmaster.csv")
+    df2 = pd.read_csv("/workspace/Python_Main/myApp/dfmaster2.csv")
+    measure_list = dg.data_request("/workspace/Python_Main/myApp/Resources/Index.csv")
+
+
+    # Set Index for imported data
+    df = df.set_index(['Datetime'])
+    df2 = df2.set_index(['Datetime'])
+
+
+    # Send measures to list
+    measure_list = measure_list.values.tolist()    
 
     if '/control_chart' in pathname:
+        time_math_1 =  dt.datetime.now()
         measure_name, comp_filter = sp.filter_control(pathname)
         print(pathname)
         print(measure_name)
         print(comp_filter)
 
-        measures = remove_duplicates(measure_list, measure_name, comp_filter)
-
+        measures, measure_names = remove_duplicates(measure_list,
+                                                    measure_name,
+                                                    comp_filter)
+        
+                
         # Loop through measures and find / except all measures which arent included
         index = 0
         successful_tries = []
@@ -129,25 +128,29 @@ def chart_page_filter(pathname):
                 print('{} measure not found in this set'.format(measure))
             # Step through the index until the last
             index = index + 1
-        # print (successful_tries)
+        #print (successful_tries)
         # print (df[successful_tries])
 
         # filter df and set new df
         new_df = df[successful_tries]
         
         new_df2 = dg.modify_df2(df2, successful_tries)
-        print(new_df2)
+        #print(new_df2)
         # check through data for df2 to ensure only correct columns are included
-
+        
+        
+        #choose start date for the time filter - #### this is not fully working cannot look back past midnight currently
+        start_date = (dt.datetime.now(pytz.timezone('Australia/Sydney')) - dt.timedelta(hours = hours )).strftime('%Y-%m-%d %H:%M:%S')
+        new_df, new_df2 = dg.dropdown_times(new_df, new_df2, start_date)
         # Define figures for control chart
-
-        fig = control_chart(new_df, new_df2)
+        time_math_2 = dt.datetime.now() - time_math_1
+        print ("Math updated in {}".format(time_math_2))
+        fig = control_chart(new_df, new_df2, measure_names)
         fig2 = histogram(new_df)
 
         # create body for callback output #
 
         return fig, fig2
-
 
 # ################# create body for the page ########################
 # ###################################################################
@@ -165,12 +168,6 @@ body = html.Div(
                    width="auto", xs=11, md=7, lg=7),
 
                dbc.Col([
-                   daq.Indicator(
-                    id='RAG-indicator',
-                    label="Default")],
-                    width="auto", xs=2, md=2, lg=2),
-
-               dbc.Col([
                    html.H4("Histogram"),
                    dcc.Graph(id='histo-page-filter')],
                    width="auto", xs=12, md=4, lg=2),
@@ -183,7 +180,8 @@ body = html.Div(
 def charts_page():
     layout = html.Div([
         nav,
-        date_picker,
+        dropdown,
+        #date_picker,
         #time_picker,
         header,
         body
