@@ -111,7 +111,8 @@ def card_template_overview(id_name, process_name, image_path):
                             )
                 ]
             )
-        ]
+        ],
+        className="w-25 mb-3",
     )
 
     return card
